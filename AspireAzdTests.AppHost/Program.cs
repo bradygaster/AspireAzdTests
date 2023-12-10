@@ -1,11 +1,18 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var cache = builder.AddRedisContainer("cache");
+var cache       = // redis instance the app will use for output caching
+        builder.AddRedisContainer("cache");
 
-var apiservice = builder.AddProject<Projects.AspireAzdTests_ApiService>("apiservice");
+var pubsub      = // redis instance the app will use for simple messages
+        builder.AddRedisContainer("pubsub");
 
-builder.AddProject<Projects.AspireAzdTests_Web>("webfrontend")
-    .WithReference(cache)
-    .WithReference(apiservice);
+var apiservice  = // the back-end API the front end will call
+        builder.AddProject<Projects.AspireAzdTests_ApiService>("apiservice");
+
+_               = // the front end app
+        builder.AddProject<Projects.AspireAzdTests_Web>("webfrontend")
+               .WithReference(cache)
+               .WithReference(pubsub)
+               .WithReference(apiservice);
 
 builder.Build().Run();

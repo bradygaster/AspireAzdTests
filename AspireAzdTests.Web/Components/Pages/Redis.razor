@@ -1,0 +1,35 @@
+﻿@page "/redis"
+@using StackExchange.Redis
+@rendermode InteractiveServer
+@inject StackExchange.Redis.IConnectionMultiplexer redis
+
+<PageTitle>Redis</PageTitle>
+
+<h1>Redis Pubsub</h1>
+
+<p>Here you can test if Redis is accepting and delivering messages. If so, you know Redis is working end-to-end.</p>
+
+<p id="messageContainer">@messageReceived</p>
+
+<InputText @bind-Value="messageEntered" />
+<button class="btn btn-primary" id="sendMessageButton" @onclick="SendMessage">Send</button>
+
+
+@code {
+    string messageEntered = "asdfasdf";
+    string messageReceived = "No message yet";
+
+    override protected async Task OnInitializedAsync()
+    {
+        await redis.GetSubscriber().SubscribeAsync(RedisChannel.Literal("tests"), (channel, value) =>
+        {
+            messageReceived = value.ToString();
+            InvokeAsync(() => StateHasChanged());
+        });
+    }
+
+    private async void SendMessage()
+    {
+        await redis.GetSubscriber().PublishAsync(RedisChannel.Literal("tests"), $"Sent to Redis: {messageEntered}");
+    }
+}
