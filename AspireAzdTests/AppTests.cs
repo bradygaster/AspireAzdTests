@@ -51,9 +51,23 @@ public class AppTests : PageTest
         // Expects the URL to contain intro.
         await Expect(Page).ToHaveURLAsync(new Regex(".*counter"));
 
+        // wait for the weather forecast to load
+        await Task.Delay(2000);
+
         // locate the counter status label
-        (await Page.GetByText("Current count: 0").TextContentAsync())
-            .ShouldEqual("Current count: 0");
+        await Expect(Page.Locator("#status"))
+            .ToHaveTextAsync("Current count: 0");
+
+        // click the button to increment the counter
+        await Page.Locator("#counterButton").ClickAsync(new()
+        {
+            Force = true,
+            Timeout = 3000
+        });
+
+        // locate the counter status label and check to see if it's updated
+        await Expect(Page.Locator("#status"))
+            .ToHaveTextAsync("Current count: 1");
     }
 
     [Test]
