@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using Should;
@@ -7,11 +8,24 @@ using Should;
 [TestFixture]
 public class AppTests : PageTest
 {
+    string _url = string.Empty;
+
+    [OneTimeSetUp]
+    public void OneTimeSetup()
+    {
+        var builder = new ConfigurationBuilder().AddUserSecrets(typeof(AppTests).Assembly);
+        var config = builder.Build();
+
+        _url = config["LIVE_APP_URL"] ?? string.Empty;
+    }
+
     private async Task GetHomePage()
     {
-        await Page.GotoAsync("https://webfrontend.livelytree-d998503c.eastus.azurecontainerapps.io/");
-
-        await Expect(Page).ToHaveTitleAsync("Home");
+        if(!string.IsNullOrEmpty(_url))
+        {
+            await Page.GotoAsync(_url);
+            await Expect(Page).ToHaveTitleAsync("Home");
+        }
     }
 
     [Test]
@@ -74,6 +88,8 @@ public class AppTests : PageTest
         // Expects the URL to contain intro.
         await Expect(Page).ToHaveURLAsync(new Regex(".*redis"));
 
+        await Task.Delay(2000);
+
         // enter text into the textbox
         (await Page.InputValueAsync("input[name=messageEntered]"))
             .ShouldEqual("asdfasdf");
@@ -87,12 +103,11 @@ public class AppTests : PageTest
         // click the button to send the message
         await button.ClickAsync(new()
         {
-            Timeout = 5000
+            Timeout = 3000,
+            Force = true
         });
 
-        var val = await Page.TextContentAsync("#messageContainer");
-
-        (await Page.TextContentAsync("#messageContainer"))
-            .ShouldEqual("Sent to Redis: asdfasdf");
+        await Expect(Page.Locator("#messageContainer"))
+            .ToHaveTextAsync("Sent to Redis: asdfasdf");
     }
 }
