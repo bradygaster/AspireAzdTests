@@ -1,8 +1,8 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
 
-name: AspireAzdTests
+name: AspireAzdTests.AppHost
 services:  
   app:
     language: dotnet
-    project: .\AspireAzdTests.AppHost\AspireAzdTests.AppHost.csproj
+    project: .\AspireAzdTests.AppHost.csproj
     host: containerapp

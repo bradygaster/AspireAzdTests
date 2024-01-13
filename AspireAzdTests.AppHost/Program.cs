@@ -1,13 +1,13 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var cache       = // redis instance the app will use for output caching
-        builder.AddRedisContainer("cache");
+        builder.AddRedis("cache");
 
 var pubsub      = // redis instance the app will use for simple messages
-        builder.AddRedisContainer("pubsub");
+        builder.AddRedis("pubsub");
 
 var peopleTable = // azure table storage for storing people data
-        builder.AddAzureStorage("azureStorage")
+        builder.AddAzureStorage("storage")
                .UseEmulator()
                .AddTables("person");
 
