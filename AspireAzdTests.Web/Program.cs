@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 builder.AddRedisOutputCache("cache");
 builder.AddRedis("pubsub");
-builder.AddAzureTableService("person");
+builder.AddAzureTableService("requestlog");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

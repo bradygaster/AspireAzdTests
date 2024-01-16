@@ -9,7 +9,7 @@ var pubsub      = // redis instance the app will use for simple messages
 var peopleTable = // azure table storage for storing people data
         builder.AddAzureStorage("storage")
                .UseEmulator()
-               .AddTables("person");
+               .AddTables("requestlog");
 
 var apiservice  = // the back-end API the front end will call
         builder.AddProject<Projects.AspireAzdTests_ApiService>("apiservice");
