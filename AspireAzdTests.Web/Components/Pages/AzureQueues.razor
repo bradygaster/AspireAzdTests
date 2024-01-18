@@ -39,12 +39,15 @@ else
 @code {
     string messageEntered = RandomString();
     List<string> messages = new();
+    QueueClient? queueClient;
 
     private static string RandomString() => new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", 10)
         .Select(s => s[Random.Shared.Next(s.Length)]).ToArray());
 
     override protected async Task OnInitializedAsync()
     {
+        queueClient = queueServiceClient.GetQueueClient("messages");
+        await queueClient.CreateIfNotExistsAsync();
         await ReadFromQueue();
 
         await InvokeAsync(() => StateHasChanged());
@@ -52,25 +55,26 @@ else
 
     private async Task ReadFromQueue()
     {
-        var queueClient = queueServiceClient.GetQueueClient("messages");
-        await queueClient.CreateIfNotExistsAsync();
-
-        var result = await queueClient.ReceiveMessagesAsync();
-
-        foreach (var message in result.Value)
+        if (queueClient != null)
         {
-            messages.Add(message.MessageText);
-            await queueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
+            var result = await queueClient.ReceiveMessagesAsync();
+
+            foreach (var message in result.Value)
+            {
+                messages.Add(message.MessageText);
+                await queueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
+            }
         }
     }
 
     private async void SendMessage()
     {
-        var queueClient = queueServiceClient.GetQueueClient("messages");
-        await queueClient.CreateIfNotExistsAsync();
-        await queueClient.SendMessageAsync(messageEntered);
-        await ReadFromQueue();
+        if (queueClient != null)
+        {
+            await queueClient.SendMessageAsync(messageEntered);
+            await ReadFromQueue();
 
-        messageEntered = RandomString();
+            messageEntered = RandomString();
+        }
     }
 }
