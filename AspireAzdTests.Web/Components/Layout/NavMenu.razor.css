@@ -58,6 +58,10 @@
     content: url('https://api.iconify.design/bi/cloud-upload-fill.svg?color=white');
 }
 
+.bi-azqueues {
+    content: url('https://api.iconify.design/bi/send.svg?color=white');
+}
+
 .nav-item {
     font-size: 0.9rem;
     padding-bottom: 0.5rem;

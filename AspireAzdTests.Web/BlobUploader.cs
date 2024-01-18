@@ -15,6 +15,8 @@ public class BlobUploader : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        await Task.Delay(5000);
+
         var resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
         var markdowns = resources.Where(r => r.EndsWith(".md")).ToList();
 
