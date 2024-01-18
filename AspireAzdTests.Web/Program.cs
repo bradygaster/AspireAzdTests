@@ -8,6 +8,8 @@ builder.AddServiceDefaults();
 builder.AddRedisOutputCache("cache");
 builder.AddRedis("pubsub");
 builder.AddAzureTableService("requestlog");
+builder.AddAzureBlobService("markdown");
+builder.Services.AddHostedService<BlobUploader>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
