@@ -11,8 +11,8 @@ var azureStorage    = builder
                         .AddAzureStorage("storage")
                             .UseEmulator();
 
-// azure table storage for storing people data
-var peopleTable     = azureStorage.AddTables("requestlog");
+// azure table storage for storing request data
+var requestTable    = azureStorage.AddTables("requestlog");
 
 // azure blob storage for storing markdown files
 var markdownBlobs   = azureStorage.AddBlobs("markdown");
@@ -26,7 +26,7 @@ _                   = builder
                            .WithReference(redisCache)
                            .WithReference(redisPubSub)
                            .WithReference(apiservice)
-                           .WithReference(peopleTable)
+                           .WithReference(requestTable)
                            .WithReference(markdownBlobs);
 
 builder.Build().Run();
