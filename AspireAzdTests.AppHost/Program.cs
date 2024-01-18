@@ -17,6 +17,9 @@ var requestTable    = azureStorage.AddTables("requestlog");
 // azure blob storage for storing markdown files
 var markdownBlobs   = azureStorage.AddBlobs("markdown");
 
+// azure queues for sending messages
+var messageQueue    = azureStorage.AddQueues("messages");
+
 // the back-end API the front end will call
 var apiservice      = builder.AddProject<Projects.AspireAzdTests_ApiService>("apiservice");
 
@@ -27,6 +30,7 @@ _                   = builder
                            .WithReference(redisPubSub)
                            .WithReference(apiservice)
                            .WithReference(requestTable)
-                           .WithReference(markdownBlobs);
+                           .WithReference(markdownBlobs)
+                           .WithReference(messageQueue);
 
 builder.Build().Run();

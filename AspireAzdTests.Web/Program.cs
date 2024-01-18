@@ -9,6 +9,7 @@ builder.AddRedisOutputCache("cache");
 builder.AddRedis("pubsub");
 builder.AddAzureTableService("requestlog");
 builder.AddAzureBlobService("markdown");
+builder.AddAzureQueueService("messages");
 builder.Services.AddHostedService<BlobUploader>();
 
 // Add services to the container.
