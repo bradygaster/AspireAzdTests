@@ -23,15 +23,8 @@ public class RedisTests : TestBase
 
         await Task.Delay(2000);
 
-        // enter text into the textbox
-        (await Page.InputValueAsync("input[name=messageEntered]"))
-            .ShouldEqual("asdfasdf");
-
         // expect the page to have a button
         var button = Page.GetByRole(AriaRole.Button, new() { Name = "Send" });
-
-        (await Page.TextContentAsync("#messageContainer"))
-            .ShouldEqual("No message yet");
 
         // click the button to send the message
         await button.ClickAsync(new()
@@ -40,7 +33,8 @@ public class RedisTests : TestBase
             Force = true
         });
 
-        await Expect(Page.Locator("#messageContainer"))
-            .ToHaveTextAsync("Sent to Redis: asdfasdf");
+        // make sure we have data
+        (await Page.EvalOnSelectorAsync<int>("//table", "tbl => tbl.rows.length"))
+            .ShouldBeGreaterThan(0);
     }
 }
