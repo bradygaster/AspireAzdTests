@@ -9,13 +9,27 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\aboutus.md" />
+	  <None Remove="Resources\helloworld.md" />
+	  <None Remove="Resources\privacy.md" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\aboutus.md" />
+	  <EmbeddedResource Include="Resources\helloworld.md" />
+	  <EmbeddedResource Include="Resources\privacy.md" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\AspireAzdTests.ServiceDefaults\AspireAzdTests.ServiceDefaults.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Aspire.Azure.Data.Tables" Version="8.0.0-preview.2.23619.3" />
+		<PackageReference Include="Aspire.Azure.Storage.Blobs" Version="8.0.0-preview.2.23619.3" />
 		<PackageReference Include="Aspire.StackExchange.Redis" Version="8.0.0-preview.2.23619.3" />
 		<PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" Version="8.0.0-preview.2.23619.3" />
+		<PackageReference Include="Markdig" Version="0.34.0" />
 	</ItemGroup>
 
 </Project>
